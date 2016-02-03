@@ -2,6 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
 
+
 exports.headers = headers = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -30,6 +31,32 @@ console.log(asset);
 }
 };
 
+exports.handlePostRequest = function (req, res) {
+  var buildRequest = "";
+  var fileName = "../archives/sites.txt";
+  req.on('data', function (data) {
+            buildRequest += data.toString();
+        });
+
+        req.on('end', function (data) {
+          console.log('HELLOOOOOOO!O!O!!O!O!O!OO')
+          var parsedURL = buildRequest.split("=")[1];
+           // console.log(archive.list,"archive.listarchive.listarchive.listarchive.listarchive.list");
+            fs.readFile(fileName, 'utf8', function (err, data) {
+              if(err) throw err;
+              console.log('datadatadatadatadatadatadatadata',data);
+              data = JSON.parse(data);
+              data += "\n"+parsedURL;
+              fs.writeFile(fileName, 'utf8',JSON.stringify(data), function (err) {
+                if (err) console.log('Could not write fileStore');
+                else console.log('File fileStore written');
+              });
+            });
+
+            res.send('');        
+          });
+
+};
 
 
 // As you progress, keep thinking about what helper functions you can put here!

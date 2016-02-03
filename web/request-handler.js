@@ -7,19 +7,37 @@ var httpHelper = require('./http-helpers');
 
 exports.handleRequest = function (req, res) {
 
-  var reqPath = url.parse(req.url).pathname
-  console.log("reqPath for .......", reqPath);
-  reqPath = decodeURIComponent(reqPath);
-  if (req.method === 'GET'){
+var method = req.method;
+var receivedURL = req.url;
+// parsing the URL path name google.com / --> after here
+var reqPath = url.parse(receivedURL).pathname;
+reqPath = decodeURIComponent(reqPath);
+
+// console.log("reqPath for .......  :", reqPath);
+// console.log(method,'  Method..........................');
+var actions = {
+  'GET': function (req, res) {
     if(reqPath === "/"){
-      reqPath="index.html";
+      reqPath = "index.html";
       console.log("reqPath for ....... before serveasset", reqPath);
-      res.end('/<input/')
+      res.end('/<input/');
       // httpHelper.serveAssets(res, reqPath);
     } else {
       httpHelper.serveAssets(res, reqPath);
     }
+  },
+  'POST': function (req, res) {
+    httpHelper.handlePostRequest(req,res);
+  },
+  'OPTIONS': function (req, res) {
 
-  } else if (req.method=== 'POST'){}
+  }
+};
+
+  
+  if ( actions[method] ){
+    actions[method](req, res);
+  }
   //res.end(archive.paths.list);
+
 };
