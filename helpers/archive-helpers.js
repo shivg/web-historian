@@ -59,7 +59,13 @@ exports.addUrlToList = function(urlToAdd, cb) {
   cb ? cb() : void 0;
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(urlToCheckArchive, cb) {
+    var pathtoCheck = this.paths.archivedSites+'/'+urlToCheckArchive;
+    // check if the path exist, returns true or false
+    fs.exists(pathtoCheck, function (exists)  {
+      //Run the callback with the boolean
+      cb(exists);
+    });
 };
 
 exports.downloadUrls = function() {
