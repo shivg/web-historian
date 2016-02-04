@@ -76,52 +76,55 @@ exports.downloadUrls = function(urlArray) {
   // var fileNamesArray = [];
   // exports.readListOfUrls(function (fileNameList) {
    
-    urlArray.forEach(function (urlToFetch) {
-      console.log('urlToFetchurlToFetchurlToFetchurlToFetchurlToFetch', urlToFetch)
-      var options = {
-        hostname: urlToFetch,
-        method: "GET",
-        path:"/",
-        headers: {Accept: "text/html"}
-      };
 
-      var responseData = "";
+      function fetchAndStore(urlToFetchSync, cb){
+        var options = {
+          hostname: urlToFetchSync,
+          method: "GET",
+          path:"/",
+          headers: {Accept: "text/html"}
+        };
 
-      var request = http.request(options, function(response) {
+        var responseData = "";
 
-          response.setEncoding('utf8');
-          response.on('data', function (chunk) {
-            responseData+=chunk.toString();
-          });
-          
-          response.on('end', function () {
-            var urltoStore = that.paths.archivedSites+"/"+urlToFetch;
-            exports.isUrlArchived(urltoStore, function (exist) {
-              if (!exist) {
-                  fs.writeFile(urltoStore, responseData, function (err) {
-                if (err) console.log(err)
-                  else console.log('File stored')
-                });
-              }
+        var request = http.request(options, function(response) {
+
+            response.setEncoding('utf8');
+            response.on('data', function (chunk) {
+              responseData+=chunk.toString();
             });
-          });
+            
+            response.on('end', function () {
+              var urltoStore = that.paths.archivedSites+"/"+urlToFetchSync;
+              exports.isUrlArchived(urltoStore, function (exist) {
+                if (!exist) {
+                    fs.writeFile(urltoStore, responseData, function (err) {
+                  if (err) console.log(err)
+                    else console.log('File stored'); 
+                  });
+                }
+              });
+            });
+        request.end(); 
+        });
+        cb();
+      }
       
-      });
-      
-      // function fetchData (n) {
-      //   if(n<urlArray.length) {
-      //     fetchAndStore( urlArray[n], function(err) {
-      //           if( err ) {
-      //             console.log('error: '+err)
-      //           }
-      //           else {
-      //             fetchData(i+1);
-      //           }
-      //     }
-      // }
-      // }
+      function fetchData (n) {
+        if(n<urlArray.length) {
+          fetchAndStore( urlArray[n], function(err) {
 
-      request.end();
-    });
-  // });
+                if( err ) {
+                  console.log('error: '+err)
+                }
+                else {
+            console.log('came hereee.....................................here')
+                  fetchData(n+1);
+                }
+          });
+        }
+      }
+    
+    fetchData(0) 
+
 };
