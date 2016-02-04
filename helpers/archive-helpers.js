@@ -27,11 +27,16 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(cb) {
-  // maybe come back and do a refactor with readFile, maybe.
-  var readFile = fs.readFileSync(this.paths.list).toString().split('\n');
-  if(readFile){
-    cb(readFile);
-  }
+  // reading sites.text, and calling callback with the read data
+  fs.readFile(this.paths.list, 'utf8', function (err, data) {
+    // split by the \n new line escape
+    var readFile = data.split('\n');
+    // if this file exist
+    if(readFile){
+      // callback
+      cb(readFile);
+    }
+  });
     
 
 };
