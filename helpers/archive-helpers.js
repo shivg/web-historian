@@ -49,6 +49,7 @@ exports.isUrlInList = function(urlTarget , cb) {
       isItThere = true;
     }
   });
+  // if cb exist, call it back with isItThere boolean, if cd does not exist, return a undefine with void 0.
   cb ? cb(isItThere) : void 0;
 };
 
@@ -71,8 +72,23 @@ exports.isUrlArchived = function(urlToCheckArchive, cb) {
 
 exports.downloadUrls = function(urlArray) {
   console.log('urlArrayurlArrayurlArrayurlArrayurlArrayurlArray', urlArray)
+  // request to a request method, takes a url
   var request = require("request");
+  // prevent free invocation
   var that = this;
+  // iterate through the urlArray, request takes a url, and pipes data to the createWriteStream the uses, combines path and urltoFetch.
   urlArray.forEach( function (urlToFetch) { request('http://'+urlToFetch).pipe(fs.createWriteStream(that.paths.archivedSites+"/"+urlToFetch)) });
 
 };
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,8 +20,7 @@ var actions = {
     if(reqPath === "/"){
       reqPath = "index.html";
       console.log("reqPath for ....... before serveasset", reqPath);
-      res.end('/<input/');
-      // httpHelper.serveAssets(res, reqPath);
+      httpHelper.serveAssets(res, reqPath);
     } else {
       httpHelper.serveAssets(res, reqPath);
     }

@@ -16,19 +16,21 @@ exports.serveAssets = function(res, asset, callback) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
 console.log(asset);
-  if (asset === '/www.google.com'){res.end('google')} else {
-  fs.readFile(asset,  function (err, data) {
-    console.log(err,"error")
+ // if (asset === '/www.google.com'){res.end('google')} else {
+  if (asset === 'index.html') asset = './public/'+asset;
+  console.log(asset,"inside servvservvservvservvservvservv");
+  fs.readFile(asset, 'utf8', function (err, data) {
+    console.log('datadatadatadatadatadatadata', data)
     if (!err) {
       res.writeHead(200, headers);
-      console.log(data,'data', 'err')
       res.end(data);
     } else {
+      console.log(err,'err');
       res.writeHead(404, headers);
       res.end('Not Found here, dude');
     }
   });
-}
+//}
 };
 
 exports.handlePostRequest = function (req, res) {
@@ -43,8 +45,10 @@ exports.handlePostRequest = function (req, res) {
 // Append it to sites.txt and send 302 response back to client
   req.on('end', function (data) {
     var parsedURL = buildRequest.split("=")[1]+"\n";
-
+    var headerLocation = buildRequest.split("=")[1];
     archive.addUrlToList(parsedURL);
+    headers['Location'] = "/"+headerLocation;
+    console.log('headerheaderheaderheaderheaderheader', headers)
     res.writeHead(302, headers);
     res.end();       
     });
