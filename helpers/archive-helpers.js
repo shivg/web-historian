@@ -71,60 +71,8 @@ exports.isUrlArchived = function(urlToCheckArchive, cb) {
 
 exports.downloadUrls = function(urlArray) {
   console.log('urlArrayurlArrayurlArrayurlArrayurlArrayurlArray', urlArray)
-  var http = require("http");
+  var request = require("request");
   var that = this;
-  // var fileNamesArray = [];
-  // exports.readListOfUrls(function (fileNameList) {
-   
-
-      function fetchAndStore(urlToFetchSync, cb){
-        var options = {
-          hostname: urlToFetchSync,
-          method: "GET",
-          path:"/",
-          headers: {Accept: "text/html"}
-        };
-
-        var responseData = "";
-
-        var request = http.request(options, function(response) {
-
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              responseData+=chunk.toString();
-            });
-            
-            response.on('end', function () {
-              var urltoStore = that.paths.archivedSites+"/"+urlToFetchSync;
-              exports.isUrlArchived(urltoStore, function (exist) {
-                if (!exist) {
-                    fs.writeFile(urltoStore, responseData, function (err) {
-                  if (err) console.log(err)
-                    else console.log('File stored'); 
-                  });
-                }
-              });
-            });
-        request.end(); 
-        });
-        cb();
-      }
-      
-      function fetchData (n) {
-        if(n<urlArray.length) {
-          fetchAndStore( urlArray[n], function(err) {
-
-                if( err ) {
-                  console.log('error: '+err)
-                }
-                else {
-            console.log('came hereee.....................................here')
-                  fetchData(n+1);
-                }
-          });
-        }
-      }
-    
-    fetchData(0) 
+  urlArray.forEach( function (urlToFetch) { request('http://'+urlToFetch).pipe(fs.createWriteStream(that.paths.archivedSites+"/"+urlToFetch)) });
 
 };
