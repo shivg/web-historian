@@ -34,7 +34,7 @@ exports.readListOfUrls = function(cb) {
     // if this file exist
     if(readFile){
       // callback
-      cb(readFile);
+      return cb(readFile);
     }
   });
     
@@ -42,13 +42,14 @@ exports.readListOfUrls = function(cb) {
 };
 
 exports.isUrlInList = function(urlTarget , cb) {
+
   var isItThere = false;
   exports.readListOfUrls(function (data) {
     if ( data.indexOf(urlTarget) > -1) {
       isItThere = true;
     }
   });
-  cb(isItThere);
+  cb ? cb(isItThere) : void 0;
 };
 
 exports.addUrlToList = function(urlToAdd, cb) {
@@ -68,5 +69,42 @@ exports.isUrlArchived = function(urlToCheckArchive, cb) {
     });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArray) {
+  console.log('urlArrayurlArrayurlArrayurlArrayurlArrayurlArray', urlArray)
+  var http = require("http");
+  var that = this;
+  // var fileNamesArray = [];
+  // exports.readListOfUrls(function (fileNameList) {
+   
+    urlArray.forEach(function (urlToFetch) {
+      console.log('urlToFetchurlToFetchurlToFetchurlToFetchurlToFetch', urlToFetch)
+      var options = {
+        hostname: urlToFetch,
+        method: "GET",
+        path:"/",
+        headers: {Accept: "text/html"}
+      };
+
+      var responseData = "";
+
+      var request = http.request(options, function(response) {
+          response.setEncoding('utf8');
+          response.on('data', function (chunk) {
+            responseData+=chunk.toString();
+          });
+          response.on('end', function () {
+            fs.writeFile(that.paths.archivedSites+"/"+urlToFetch, responseData, function (err) {
+              if(err) console.log(err)
+                else console.log('File stored')
+            });
+          });
+      
+      });
+      // request.end(function () {
+      //   console.log('responseDataresponseDataresponseDataresponseDataresponseData',responseData)  ;
+      // }); 
+      // request.write('data\n');
+      request.end();
+    });
+  // });
 };
