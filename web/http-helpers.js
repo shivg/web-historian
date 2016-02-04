@@ -32,29 +32,24 @@ console.log(asset);
 };
 
 exports.handlePostRequest = function (req, res) {
+ 
   var buildRequest = "";
-  var fileName = "../archives/sites.txt";
+  var fileName = archive.paths.list;
+// Getting the url data from the client request
   req.on('data', function (data) {
             buildRequest += data.toString();
         });
+  
+// Append it to sites.txt and send 302 response back to client
+  req.on('end', function (data) {
+    var parsedURL = buildRequest.split("=")[1]+"\n";
 
-        req.on('end', function (data) {
-          console.log('HELLOOOOOOO!O!O!!O!O!O!OO')
-          var parsedURL = buildRequest.split("=")[1];
-           // console.log(archive.list,"archive.listarchive.listarchive.listarchive.listarchive.list");
-            fs.readFile(fileName, 'utf8', function (err, data) {
-              if(err) throw err;
-              console.log('datadatadatadatadatadatadatadata',data);
-              data = JSON.parse(data);
-              data += "\n"+parsedURL;
-              fs.writeFile(fileName, 'utf8',JSON.stringify(data), function (err) {
-                if (err) console.log('Could not write fileStore');
-                else console.log('File fileStore written');
-              });
-            });
-
-            res.send('');        
-          });
+    fs.appendFile(fileName, parsedURL , function (err) {
+      console.log('Got an error while appending: ', err)
+    });
+    res.writeHead(302, headers);
+    res.end();       
+    });
 
 };
 
