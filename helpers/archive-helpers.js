@@ -36,10 +36,22 @@ exports.readListOfUrls = function(cb) {
 
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(urlTarget , cb) {
+  var isItThere = false;
+  exports.readListOfUrls(function (data) {
+    if ( data.indexOf(urlTarget) > -1) {
+      isItThere = true;
+    }
+  });
+  cb(isItThere);
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(urlToAdd, cb) {
+  fs.appendFile(this.paths.list, urlToAdd , function (err) {
+      console.log('Got an error while appending: ', err);
+    });
+  // check if callback if exist, if it does, invoke it, otherwise do nothing.
+  cb ? cb() : void 0;
 };
 
 exports.isUrlArchived = function() {

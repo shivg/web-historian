@@ -39,14 +39,12 @@ exports.handlePostRequest = function (req, res) {
   req.on('data', function (data) {
             buildRequest += data.toString();
         });
-  
+
 // Append it to sites.txt and send 302 response back to client
   req.on('end', function (data) {
     var parsedURL = buildRequest.split("=")[1]+"\n";
 
-    fs.appendFile(fileName, parsedURL , function (err) {
-      console.log('Got an error while appending: ', err)
-    });
+    archive.addUrlToList(parsedURL);
     res.writeHead(302, headers);
     res.end();       
     });
