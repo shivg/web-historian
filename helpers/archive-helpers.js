@@ -88,22 +88,39 @@ exports.downloadUrls = function(urlArray) {
       var responseData = "";
 
       var request = http.request(options, function(response) {
+
           response.setEncoding('utf8');
           response.on('data', function (chunk) {
             responseData+=chunk.toString();
           });
+          
           response.on('end', function () {
-            fs.writeFile(that.paths.archivedSites+"/"+urlToFetch, responseData, function (err) {
-              if(err) console.log(err)
-                else console.log('File stored')
+            var urltoStore = that.paths.archivedSites+"/"+urlToFetch;
+            exports.isUrlArchived(urltoStore, function (exist) {
+              if (!exist) {
+                  fs.writeFile(urltoStore, responseData, function (err) {
+                if (err) console.log(err)
+                  else console.log('File stored')
+                });
+              }
             });
           });
       
       });
-      // request.end(function () {
-      //   console.log('responseDataresponseDataresponseDataresponseDataresponseData',responseData)  ;
-      // }); 
-      // request.write('data\n');
+      
+      // function fetchData (n) {
+      //   if(n<urlArray.length) {
+      //     fetchAndStore( urlArray[n], function(err) {
+      //           if( err ) {
+      //             console.log('error: '+err)
+      //           }
+      //           else {
+      //             fetchData(i+1);
+      //           }
+      //     }
+      // }
+      // }
+
       request.end();
     });
   // });
