@@ -2,3 +2,11 @@
 // that are waiting.
 
 // this is worker, searches the site, then stores the each url in the sites.txt in the sites folders, 
+
+// require the archive-helpers
+var archive = require('../helpers/archive-helpers');
+
+// go through the url arrays.
+archive.readListOfUrls(function (readUrls) {
+ archive.downloadUrls(readUrls); 
+});
