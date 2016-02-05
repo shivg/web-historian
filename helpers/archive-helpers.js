@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var validator = require('validator');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -76,8 +76,11 @@ exports.downloadUrls = function(urlArray) {
   // prevent free invocation
   var that = this;
   // iterate through the urlArray, request takes a url, and pipes data to the createWriteStream the uses, combines path and urltoFetch.
-  urlArray.forEach( function (urlToFetch) { request('http://'+urlToFetch).pipe(fs.createWriteStream(that.paths.archivedSites+"/"+urlToFetch)); });
-
+  urlArray.forEach( function (urlToFetch) {
+    if(validator.isURL(urlToFetch)){
+      request('http://'+urlToFetch).pipe(fs.createWriteStream(that.paths.archivedSites+"/"+urlToFetch));
+    }
+  });
 };
 
 

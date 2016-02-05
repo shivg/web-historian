@@ -8,7 +8,9 @@
     "cron": "^1.0.3",
     "crontab": "^1.1.2",
     "request": "^2.34.0",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "valid-url": "^1.0.9",
+    "validator": "^4.7.0"
   },
   "devDependencies": {
     "chai": "^1.9.0",

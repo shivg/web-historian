@@ -9,7 +9,6 @@ var archive = require('../helpers/archive-helpers');
 require('crontab').load(function(err, crontab) {
   
 var job = crontab.create('node '+__dirname+'/htmlfetcher.js' , '* * * * *');
-console.log('jobjobjobjobjobjobjobjobjob', job)
 crontab.save();
 });
 

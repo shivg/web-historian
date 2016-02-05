@@ -31,6 +31,5 @@ var actions = {
   if ( actions[method] ){
     actions[method](req, res);
   }
-  //res.end(archive.paths.list);
 
 };

@@ -19,12 +19,10 @@ console.log(asset);
  // if (asset === '/www.google.com'){res.end('google')} else {
   if (asset === "/") asset = './public/index.html';
     else asset = "../archives/sites"+asset;
-  console.log(asset,"inside servvservvservvservvservvservv");
   fs.readFile(asset, 'utf8', function (err, data) {
     if (err) {
       console.log(err,'err');
       fs.readFile('./public/loading.html', 'utf8', function (err, data) {
-        console.log(err,'errrrrrrrerrrrrrrrerrrrrrrrerrrrrrrrerrrrrrrrerrrrrrrrerrrrrrrr', data,"datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata")
         res.writeHead(200, headers);
         res.end(data);
       });
@@ -48,7 +46,8 @@ exports.handlePostRequest = function (req, res) {
 // Append it to sites.txt and send 302 response back to client
   req.on('end', function (data) {
     var parsedURL = buildRequest.split("=")[1];
-
+    parsedURL = decodeURIComponent(parsedURL);
+    
     archive.addUrlToList("\n"+parsedURL);
     headers['Location'] = "/"+parsedURL;
     res.writeHead(302, headers);
