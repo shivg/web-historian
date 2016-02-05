@@ -17,13 +17,7 @@ reqPath = decodeURIComponent(reqPath);
 // console.log(method,'  Method..........................');
 var actions = {
   'GET': function (req, res) {
-    if(reqPath === "/"){
-      reqPath = "index.html";
-      console.log("reqPath for ....... before serveasset", reqPath);
       httpHelper.serveAssets(res, reqPath);
-    } else {
-      httpHelper.serveAssets(res, reqPath);
-    }
   },
   'POST': function (req, res) {
     httpHelper.handlePostRequest(req,res);

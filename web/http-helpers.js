@@ -17,17 +17,18 @@ exports.serveAssets = function(res, asset, callback) {
   // css, or anything that doesn't change often.)
 console.log(asset);
  // if (asset === '/www.google.com'){res.end('google')} else {
-  if (asset === 'index.html') asset = './public/'+asset;
+  if (asset === "/") asset = './public/index.html';
   console.log(asset,"inside servvservvservvservvservvservv");
   fs.readFile(asset, 'utf8', function (err, data) {
-    console.log('datadatadatadatadatadatadata', data)
-    if (!err) {
+    if (err) {
+      console.log(err,'err');
+      fs.readFile('./public/loading.html', 'utf8', function (err, data) {
+        res.writeHead(200, headers);
+        res.end(data);
+      });
+    } else {
       res.writeHead(200, headers);
       res.end(data);
-    } else {
-      console.log(err,'err');
-      res.writeHead(404, headers);
-      res.end('Not Found here, dude');
     }
   });
 //}
@@ -44,11 +45,10 @@ exports.handlePostRequest = function (req, res) {
 
 // Append it to sites.txt and send 302 response back to client
   req.on('end', function (data) {
-    var parsedURL = buildRequest.split("=")[1]+"\n";
-    var headerLocation = buildRequest.split("=")[1];
+    var parsedURL = buildRequest.split("=")[1];
+
     archive.addUrlToList(parsedURL);
-    headers['Location'] = "/"+headerLocation;
-    console.log('headerheaderheaderheaderheaderheader', headers)
+    headers['Location'] = "/"+parsedURL;
     res.writeHead(302, headers);
     res.end();       
     });
